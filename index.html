@@ -9,6 +9,91 @@
     <title>Tic Tac Toe</title>
 </head>
 <body>
+    <header>
+        <div>
+            <p>Tic Tac Toe</p>
+        </div>
+    </header>
+    <main>
+        <div class="display start">
+            <p>Who do you dare compete with?</p>
+            <div>
+                <!--name: current display, 
+                    value: next display -->
+                <button class="menuSelect" name="start" value="human">A fellow human</button>
+                <button class="menuSelect" name="start" value="ai">The computer of doom</button>
+            </div>
+        </div>
+        <div class="display human">
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <th></th>
+                        <th>pic1</th>
+                        <th>pic2</th>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th><input type="text" class= "playerName" id="p1human" placeholder="First player's name"></th>
+                        <th><input type="text" class="playerName" id="p2h" placeholder="Second player's name"></th>
+                    </tr>
+                    <tr>
+                        <th>Marker</th>
+                        <th>X</th>
+                        <th>O</th>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="menuSelect" name="human" value="play">Let's Play!</button>
+            <button class="menuSelect" name="human" value="back">Go back</button>
+        </div>
+        <div class="display ai">
+            <table class="form">
+                <tbody>
+                    <tr>
+                        <th></th>
+                        <th>pic1</th>
+                        <th>pic2</th>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th><input type="text" class="playerName" id="p1ai" placeholder="First player's name"></th>
+                        <th>HAL 9000</th>
+                    </tr>
+                    <tr>
+                        <th>Marker</th>
+                        <th>X</th>
+                        <th>O</th>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="menuSelect" name="ai" value="play">Let's Play!</button>
+            <button class="menuSelect" name="ai" value="back">Go back</button>
+        </div>
+        <div class="display play">
+            <table class="gameBoard">
+                <tbody>
+                    <tr>
+                        <th><button type="button" class="square" id='sq00'></button></th>
+                        <th><button type="button" class="square" id='sq01'></button></th>
+                        <th><button type="button" class="square" id='sq02'></button></th>
+                    </tr>
+                    <tr>
+                        <th><button type="button" class="square" id='sq10'></button></th>
+                        <th><button type="button" class="square" id='sq11'></button></th>
+                        <th><button type="button" class="square" id='sq12'></button></th>
+                    </tr>
+                    <tr>
+                        <th><button type="button" class="square" id='sq20'></button></th>
+                        <th><button type="button" class="square" id='sq21'></button></th>
+                        <th><button type="button" class="square" id='sq22'></button></th>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="menuSelect" name="play" value="back">Go back</button>
+        </div>
+        
+    </main>
     
 </body>
 </html>

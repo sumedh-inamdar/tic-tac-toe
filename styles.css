@@ -1,0 +1,33 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: cadetblue;
+}
+
+main, .display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: coral;
+}
+.display.human, .display.ai, .display.play {
+    display: none;
+}
+
+input#p2name {
+    display: flex;
+}
+.square {
+    height: 50px;
+    width: 50px;
+}
+
+.x {
+    background-color: blue;
+}
+
+.o {
+    background-color: red;
+}
