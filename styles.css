@@ -19,15 +19,35 @@ main, .display {
 input#p2name {
     display: flex;
 }
+
+/* Play display and Game Board [Start] */
+
+
+div.gameCont {
+    display: flex;
+}
+div.pInfo {
+    border: 1px solid black;
+}
+div.p1 {
+    background-color: lightblue;
+}
+div.p2 {
+    background-color: red;
+}
+.activeP {
+    transform: scale(1.2);
+}
 .square {
     height: 50px;
     width: 50px;
 }
 
-.x {
-    background-color: blue;
+.X {
+    background-color: lightblue;
 }
 
-.o {
+.O {
     background-color: red;
 }
+/* Play display and Game Board [End] */

@@ -35,7 +35,7 @@
                     <tr>
                         <th>Name</th>
                         <th><input type="text" class= "playerName" id="p1human" placeholder="First player's name"></th>
-                        <th><input type="text" class="playerName" id="p2h" placeholder="Second player's name"></th>
+                        <th><input type="text" class="playerName" id="p2human" placeholder="Second player's name"></th>
                     </tr>
                     <tr>
                         <th>Marker</th>
@@ -71,26 +71,40 @@
             <button class="menuSelect" name="ai" value="back">Go back</button>
         </div>
         <div class="display play">
-            <table class="gameBoard">
-                <tbody>
-                    <tr>
-                        <th><button type="button" class="square" id='sq00'></button></th>
-                        <th><button type="button" class="square" id='sq01'></button></th>
-                        <th><button type="button" class="square" id='sq02'></button></th>
-                    </tr>
-                    <tr>
-                        <th><button type="button" class="square" id='sq10'></button></th>
-                        <th><button type="button" class="square" id='sq11'></button></th>
-                        <th><button type="button" class="square" id='sq12'></button></th>
-                    </tr>
-                    <tr>
-                        <th><button type="button" class="square" id='sq20'></button></th>
-                        <th><button type="button" class="square" id='sq21'></button></th>
-                        <th><button type="button" class="square" id='sq22'></button></th>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="gameCont">
+                <div class="pInfo p1">
+                    <p id="p1name"></p>
+                    <p id="p1marker"></p>
+                    <p id="p1score"></p>
+                </div>
+                <table class="gameBoard">
+                    <tbody>
+                        <tr>
+                            <th><button type="button" class="square" id='sq00'></button></th>
+                            <th><button type="button" class="square" id='sq01'></button></th>
+                            <th><button type="button" class="square" id='sq02'></button></th>
+                        </tr>
+                        <tr>
+                            <th><button type="button" class="square" id='sq10'></button></th>
+                            <th><button type="button" class="square" id='sq11'></button></th>
+                            <th><button type="button" class="square" id='sq12'></button></th>
+                        </tr>
+                        <tr>
+                            <th><button type="button" class="square" id='sq20'></button></th>
+                            <th><button type="button" class="square" id='sq21'></button></th>
+                            <th><button type="button" class="square" id='sq22'></button></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pInfo p2">
+                    <p id="p2name"></p>
+                    <p id="p2marker"></p>
+                    <p id="p2score"></p>
+                </div>
+            </div>
             <button class="menuSelect" name="play" value="back">Go back</button>
+            <button class="menuSelect" name="play" value="restartGame">Restart Game</button>
+            <button class="menuSelect" name="play" value="resetScore">Reset Score</button>
         </div>
         
     </main>

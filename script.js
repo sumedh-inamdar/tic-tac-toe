@@ -4,26 +4,26 @@ factory function
 
 */
 
-function newPlayer(name, marker, gameMode, score) {
-    let _playerData = [name, marker, gameMode, score];
+function newPlayer(name, number, marker, gameMode, score) {
+    let _playerData = [name, number, marker, gameMode, score];
     const getName = () => _playerData[0];
-    const getMarker = () => _playerData[1];
-    const getgameMode = () => _playerData[2];
-    const getScore = () => _playerData[3];
+    const getNumber = () => _playerData[1];
+    const getMarker = () => _playerData[2];
+    const getgameMode = () => _playerData[3];
+    const getScore = () => _playerData[4];
     const setName = (name) => _playerData[0] = name;
-    const setMarker = (marker) => _playerData[1] = marker;
-    const setgameMode = (gameMode) => _playerData[2] = gameMode;
-    const addScore = () => _playerData[3]++;
-    const resetScore = () => _playerData[3] = 0;
+    const setgameMode = (gameMode) => _playerData[3] = gameMode;
+    const addScore = () => _playerData[4]++;
+    const resetScore = () => _playerData[4] = 0;
    
-    return { getName, getMarker, getgameMode, getScore, setName, setMarker, setgameMode, addScore, resetScore };
+    return { getName, getNumber, getMarker, getgameMode, getScore, setName, setgameMode, addScore, resetScore };
 }
 
 let gameBoard = (function() {
     let myGameBoard = {};
     let _state = [
-        ['x',0,'o'],
-        [0,'x',0],
+        [0,0,0],
+        [0,0,0],
         [0,0,0]
     ];
     myGameBoard.getState = (row, col) => {
@@ -36,29 +36,57 @@ let gameBoard = (function() {
     myGameBoard.getNumRows = () => _state.length;
     myGameBoard.getNumCols = () => _state[0].length;
 
+    myGameBoard.resetBoard = () => {
+        for (let row = 0; row < gameBoard.getNumRows(); row++) {
+            for (let col = 0; col < gameBoard.getNumCols(); col++) {
+                myGameBoard.setState(0, row, col);
+            }
+        }
+    }
     return myGameBoard;
     
 })();
 
 let displayController = (function() {
-    document.querySelectorAll('.square').forEach(square => square.addEventListener('click', sqHandler));
+    
+    const _p1name = document.querySelector('#p1name');
+    const _p2name = document.querySelector('#p2name');
+    const _p1score = document.querySelector('#p1score');
+    const _p2score = document.querySelector('#p2score');
+    const _p1marker = document.querySelector('#p1marker');
+    const _p2marker = document.querySelector('#p2marker');
 
-    function sqHandler(event) {
-        console.log(`${event.target.id} clicked!`)
-
-    }
-    function updateDisplay() {
+    function updateGameBoard() {
         for (let row = 0; row < gameBoard.getNumRows(); row++) {
             for (let col = 0; col < gameBoard.getNumCols(); col++) {
+                const sqNode = document.querySelector(`#sq${row}${col}`);
                 const sqVal = gameBoard.getState(row, col);
+
+                sqNode.classList.remove('X', 'O');
+                sqNode.textContent = '';
+                
                 if (sqVal) {
-                    const sqNode = document.querySelector(`#sq${row}${col}`);
-                    sqNode.textContent = sqVal.toUpperCase();
+                    sqNode.textContent = sqVal;
                     sqNode.classList.add(sqVal);
                 }
-                
             }
         }
+    }
+    function updateGameDisplay() {
+        // Update player score cards
+        _p1name.textContent = gameController.player1.getName();
+        _p2name.textContent = gameController.player2.getName();
+        _p1score.textContent = gameController.player1.getScore();
+        _p2score.textContent = gameController.player2.getScore();
+        _p1marker.textContent = gameController.player1.getMarker();
+        _p2marker.textContent = gameController.player2.getMarker();
+
+        // Update current active player scorecard
+        
+        const activePlayerDiv = document.querySelector(`div.${gameController.getActivePlayer().getNumber()}`);
+        const inactivePlayerDiv = document.querySelector(`div.${gameController.getActivePlayer().getNumber() == 'p1' ? 'p2' : 'p1'}`);
+        activePlayerDiv.classList.add('activeP');
+        inactivePlayerDiv.classList.remove('activeP');
     }
     function closeAllDisplays() {
         document.querySelectorAll('.display').forEach(dispItem => dispItem.style.display = 'none');
@@ -66,16 +94,19 @@ let displayController = (function() {
     function openDisplay(dispItem) {
         document.querySelector(`.display.${dispItem}`).style.display = 'flex';
     }
-    return { updateDisplay, closeAllDisplays, openDisplay };
+    return { updateGameBoard, updateGameDisplay, closeAllDisplays, openDisplay };
 })();
 
 let gameController = (function() {
     
-    let player1 = newPlayer('', 'X', '', 0);
-    let player2 = newPlayer('', 'O', '', 0);
+    let player1 = newPlayer('', 'p1', 'X', '', 0);
+    let player2 = newPlayer('', 'p2', 'O', '', 0);
+    let currActivePlayer = player1;
     let _prevMenu = [];
 
     document.querySelectorAll('.menuSelect').forEach(select => select.addEventListener('click', menuHandler));
+
+    document.querySelectorAll('.square').forEach(square => square.addEventListener('click', sqHandler));
 
     function menuHandler(event) {
         let _currMenu = event.target.name;
@@ -99,12 +130,21 @@ let gameController = (function() {
             case 'play':
                 _prevMenu.push(_currMenu);
                 player1.setName(document.querySelector(`#p1${player1.getgameMode()}`).value || 'Player 1');
-
                 if (player2.getgameMode() === 'human')
-                    player2.setName(document.querySelector('#p1human').value || 'Player 2');
-
+                    player2.setName(document.querySelector('#p2human').value || 'Player 2');
                 player1.resetScore();
                 player2.resetScore();
+                resetGame();
+                break;
+            case 'resetScore':
+                player1.resetScore();
+                player2.resetScore();
+                resetGame();
+                _nextMenu = 'play';
+                break;
+            case 'restartGame':
+                resetGame();
+                _nextMenu = 'play';
                 break;
         }
 
@@ -113,7 +153,42 @@ let gameController = (function() {
 
     }
 
-    return { player1, player2 };
+    function resetGame() {
+        currActivePlayer = player1;
+        gameBoard.resetBoard();
+        displayController.updateGameBoard();
+        displayController.updateGameDisplay();
+    }
+
+    function switchActivePlayer() {
+        switch(currActivePlayer.getNumber()) {
+            case 'p1':
+                currActivePlayer = player2;
+                break;
+            case 'p2':
+                currActivePlayer = player1;
+                break;
+        }
+    }
+
+    function getActivePlayer() {
+        return currActivePlayer;
+    }
+
+    function sqHandler(event) {
+        
+        gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
+
+        displayController.updateGameBoard();
+        
+        switchActivePlayer();
+
+        displayController.updateGameDisplay();
+        //switch player
+        //update display
+
+    }
+    return { player1, player2, getActivePlayer, switchActivePlayer };
 })();
-// displayController.updateDisplay();
+
 
