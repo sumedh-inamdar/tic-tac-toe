@@ -11,7 +11,8 @@
 - [x] Result screen
 - [x] Score update
 - [x] Add tie round logic
+- [ ] Add computer AI player
 - [ ] Add footer
-- [ ] Hover effect over square
+- [x] Hover effect over square
 - [ ] Add styling (1-2 days)
 

@@ -76,6 +76,10 @@ let displayController = (function() {
     const _roundResultDiv = document.querySelector('.roundResult');
     const _roundResultText = document.querySelector('#roundResultText');
     const _restartButtonText = document.querySelector('button[value="restartGame"]');
+    const _squares = document.querySelectorAll('.square');
+
+    _squares.forEach(square => square.addEventListener("mouseover", addHover));
+    _squares.forEach(square => square.addEventListener("mouseout", removeHover));
 
     function updateGameBoard() {
         for (let row = 0; row < gameBoard.getNumRows(); row++) {
@@ -83,12 +87,13 @@ let displayController = (function() {
                 const sqNode = document.querySelector(`#sq${row}${col}`);
                 const sqVal = gameBoard.getState(row, col);
 
-                sqNode.classList.remove('X', 'O');
+                sqNode.classList.remove('X', 'O', 'X_hover', 'O_hover');
                 sqNode.textContent = '';
                 
                 if (sqVal) {
                     sqNode.textContent = sqVal;
                     sqNode.classList.add(sqVal);
+                    //remove hover effect for sqNode
                 }
             }
         }
@@ -121,6 +126,18 @@ let displayController = (function() {
         _roundResultText.textContent = result === 'win' ? `${gameController.getActivePlayer().getName()} Wins!` : `It's a tie!`;
         _restartButtonText.textContent = 'Next Round';
 
+    }
+    function addHover(event) {
+        if (!event.target.classList.contains('X') && !event.target.classList.contains('O')) {
+            event.target.textContent = gameController.getActivePlayer().getMarker();
+            event.target.classList.add(`${gameController.getActivePlayer().getMarker()}_hover`);
+        }
+    }
+    function removeHover(event) {
+        if (event.target.classList.contains(`X_hover`) || event.target.classList.contains(`O_hover`)) {
+            event.target.textContent = '';
+            event.target.classList.remove(`X_hover`, 'O_hover');
+        }
     }
     return { updateGameBoard, updateGameDisplay, closeAllDisplays, openDisplay, showRoundResult };
 })();
