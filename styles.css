@@ -38,9 +38,25 @@ div.p2 {
 .activeP {
     transform: scale(1.2);
 }
+.gameBoardCont {
+    height: 400px;
+    width: 400px;
+}
+.gameBoard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    height: 100%;
+    width: 100%;
+}
+
 .square {
-    height: 50px;
-    width: 50px;
+    display: flex;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 64px;
 }
 
 .X {
@@ -50,4 +66,13 @@ div.p2 {
 .O {
     background-color: red;
 }
-/* Play display and Game Board [End] */
+
+/* Round Result Modal */
+
+.roundResult {
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(173, 216, 230, 0.5);
+}

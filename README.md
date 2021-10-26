@@ -6,3 +6,11 @@
 
 ## To do list:
 
+- [x] Disable square after click
+- [x] Check for three in a row
+- [ ] Result screen
+- [ ] Score update
+- [ ] Add footer
+- [ ] Hover effect over square
+- [ ] Add styling (1-2 days)
+

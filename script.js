@@ -35,13 +35,32 @@ let gameBoard = (function() {
     }
     myGameBoard.getNumRows = () => _state.length;
     myGameBoard.getNumCols = () => _state[0].length;
-
     myGameBoard.resetBoard = () => {
         for (let row = 0; row < gameBoard.getNumRows(); row++) {
             for (let col = 0; col < gameBoard.getNumCols(); col++) {
                 myGameBoard.setState(0, row, col);
             }
         }
+    }
+    myGameBoard.isGameOver = () => {
+        let threeinARow = false;
+        
+        // check all rows
+        threeinARow += _state.some(row => row.every((val, i, arr) => val != 0 && val === arr[0]));
+        
+        // check all columns
+        threeinARow += _state[0].some((val, i) => val != 0 && val === _state[1][i] && val === _state[2][i]);
+
+        // check both diags
+        threeinARow += (_state[0][0] != 0 && 
+            _state[0][0] === _state[1][1] && 
+            _state[1][1] === _state[2][2]) || 
+            (_state[0][2] != 0 && 
+            _state[0][2] === _state[1][1] && 
+            _state[1][1] === _state[2][0]);
+
+        return threeinARow;
+
     }
     return myGameBoard;
     
@@ -176,16 +195,28 @@ let gameController = (function() {
     }
 
     function sqHandler(event) {
-        
+        if (event.target.classList.contains('X') || event.target.classList.contains('O')) {
+            return; // prevent square from changing once it's been selected
+        }
+
         gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
-
         displayController.updateGameBoard();
-        
-        switchActivePlayer();
 
+        if (gameBoard.isGameOver()) {
+            console.log('Game Over!');
+
+            // increment score for winning player
+            currActivePlayer.addScore();
+            
+            // display end game modal
+
+            // Display button for next round (resetGame handler)
+            
+        } else {
+            switchActivePlayer();
+        }
+        
         displayController.updateGameDisplay();
-        //switch player
-        //update display
 
     }
     return { player1, player2, getActivePlayer, switchActivePlayer };
