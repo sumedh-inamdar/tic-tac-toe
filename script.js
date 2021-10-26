@@ -42,15 +42,12 @@ let gameBoard = (function() {
             }
         }
     }
-    myGameBoard.isGameOver = () => {
+    myGameBoard.isGameWon = () => {
         let threeinARow = false;
-        
         // check all rows
         threeinARow += _state.some(row => row.every((val, i, arr) => val != 0 && val === arr[0]));
-        
         // check all columns
         threeinARow += _state[0].some((val, i) => val != 0 && val === _state[1][i] && val === _state[2][i]);
-
         // check both diags
         threeinARow += (_state[0][0] != 0 && 
             _state[0][0] === _state[1][1] && 
@@ -60,7 +57,9 @@ let gameBoard = (function() {
             _state[1][1] === _state[2][0]);
 
         return threeinARow;
-
+    }
+    myGameBoard.isGameTied = () => {
+        return _state.every(row => row.every(val => val != 0));
     }
     return myGameBoard;
     
@@ -74,6 +73,9 @@ let displayController = (function() {
     const _p2score = document.querySelector('#p2score');
     const _p1marker = document.querySelector('#p1marker');
     const _p2marker = document.querySelector('#p2marker');
+    const _roundResultDiv = document.querySelector('.roundResult');
+    const _roundResultText = document.querySelector('#roundResultText');
+    const _restartButtonText = document.querySelector('button[value="restartGame"]');
 
     function updateGameBoard() {
         for (let row = 0; row < gameBoard.getNumRows(); row++) {
@@ -109,11 +111,18 @@ let displayController = (function() {
     }
     function closeAllDisplays() {
         document.querySelectorAll('.display').forEach(dispItem => dispItem.style.display = 'none');
+        _restartButtonText.textContent = 'Restart Game';
     }
     function openDisplay(dispItem) {
         document.querySelector(`.display.${dispItem}`).style.display = 'flex';
     }
-    return { updateGameBoard, updateGameDisplay, closeAllDisplays, openDisplay };
+    function showRoundResult(result) {
+        _roundResultDiv.style.display = 'flex';
+        _roundResultText.textContent = result === 'win' ? `${gameController.getActivePlayer().getName()} Wins!` : `It's a tie!`;
+        _restartButtonText.textContent = 'Next Round';
+
+    }
+    return { updateGameBoard, updateGameDisplay, closeAllDisplays, openDisplay, showRoundResult };
 })();
 
 let gameController = (function() {
@@ -171,14 +180,12 @@ let gameController = (function() {
         displayController.openDisplay(_nextMenu);
 
     }
-
     function resetGame() {
         currActivePlayer = player1;
         gameBoard.resetBoard();
         displayController.updateGameBoard();
         displayController.updateGameDisplay();
     }
-
     function switchActivePlayer() {
         switch(currActivePlayer.getNumber()) {
             case 'p1':
@@ -189,35 +196,26 @@ let gameController = (function() {
                 break;
         }
     }
-
     function getActivePlayer() {
         return currActivePlayer;
     }
-
     function sqHandler(event) {
         if (event.target.classList.contains('X') || event.target.classList.contains('O')) {
             return; // prevent square from changing once it's been selected
         }
-
         gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
         displayController.updateGameBoard();
 
-        if (gameBoard.isGameOver()) {
-            console.log('Game Over!');
-
-            // increment score for winning player
+        if (gameBoard.isGameWon()) {
             currActivePlayer.addScore();
-            
-            // display end game modal
-
-            // Display button for next round (resetGame handler)
-            
-        } else {
+            displayController.showRoundResult('win');
+        } else if(gameBoard.isGameTied()) {
+            displayController.showRoundResult('tie');
+        }
+        else {
             switchActivePlayer();
         }
-        
         displayController.updateGameDisplay();
-
     }
     return { player1, player2, getActivePlayer, switchActivePlayer };
 })();
