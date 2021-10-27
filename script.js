@@ -102,8 +102,8 @@ let displayController = (function() {
         // Update player score cards
         _p1name.textContent = gameController.player1.getName();
         _p2name.textContent = gameController.player2.getName();
-        _p1score.textContent = gameController.player1.getScore();
-        _p2score.textContent = gameController.player2.getScore();
+        _p1score.textContent = 'Score: ' + gameController.player1.getScore();
+        _p2score.textContent = 'Score: ' + gameController.player2.getScore();
         _p1marker.textContent = gameController.player1.getMarker();
         _p2marker.textContent = gameController.player2.getMarker();
 
@@ -117,11 +117,14 @@ let displayController = (function() {
     function closeAllDisplays() {
         document.querySelectorAll('.display').forEach(dispItem => dispItem.style.display = 'none');
         _restartButtonText.textContent = 'Restart Game';
+        _roundResultDiv.classList.remove('roundResult_X', 'roundResult_O');
     }
     function openDisplay(dispItem) {
         document.querySelector(`.display.${dispItem}`).style.display = 'flex';
     }
     function showRoundResult(result) {
+        
+        _roundResultDiv.classList.add(`roundResult_${gameController.getActivePlayer().getMarker()}`);
         _roundResultDiv.style.display = 'flex';
         _roundResultText.textContent = result === 'win' ? `${gameController.getActivePlayer().getName()} Wins!` : `It's a tie!`;
         _restartButtonText.textContent = 'Next Round';

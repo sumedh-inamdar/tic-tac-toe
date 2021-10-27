@@ -14,5 +14,5 @@
 - [ ] Add computer AI player
 - [ ] Add footer
 - [x] Hover effect over square
-- [ ] Add styling (1-2 days)
+- [x] Add styling (1-2 days)
 
