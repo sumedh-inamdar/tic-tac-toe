@@ -238,7 +238,7 @@ let gameController = (function() {
         gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
         sqHandlerHelper();
 
-        if (currActivePlayer.getNumber() == 'p2') {
+        if (currActivePlayer.getNumber() == 'p2' && currActivePlayer.getgameMode() == 'ai') {
             setTimeout(function() {
                 const [compPickRow, compPickCol] = computerBestMove();
                 gameBoard.setState(currActivePlayer.getMarker(), compPickRow, compPickCol);
@@ -261,17 +261,6 @@ let gameController = (function() {
         displayController.updateScoreCards();
     }
     function computerBestMove() {
-        // Random location pick
-        // let emptySpots = [];
-        // for (let row = 0; row < 3; row++) {
-        //     for (let col = 0; col < 3; col++) {
-        //         if (gameBoard.getState(row, col) === 0) {
-        //             emptySpots.push([row, col]);
-        //         }
-        //     }
-        // }
-        // const spot = emptySpots[Math.floor(Math.random() * emptySpots.length)];
-        // return [spot[0], spot[1]];
 
         // computer: maximizer
         // human: minimizer
