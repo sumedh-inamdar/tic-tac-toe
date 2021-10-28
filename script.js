@@ -224,6 +224,17 @@ let gameController = (function() {
             return; // prevent square from changing once it's been selected
         }
         gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
+        sqHandlerHelper();
+
+        if (currActivePlayer.getgameMode() == 'ai') {
+            setTimeout(function() {
+                const [compPickRow, compPickCol] = computerPick();
+                gameBoard.setState(currActivePlayer.getMarker(), compPickRow, compPickCol);
+                sqHandlerHelper();
+            }, 200);
+        }
+    }
+    function sqHandlerHelper() {
         displayController.updateGameBoard();
 
         if (gameBoard.isGameWon()) {
@@ -236,6 +247,20 @@ let gameController = (function() {
             switchActivePlayer();
         }
         displayController.updateGameDisplay();
+    }
+    function computerPick() {
+        // Random location pick
+        let emptySpots = [];
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < 3; col++) {
+                if (gameBoard.getState(row, col) === 0) {
+                    emptySpots.push([row, col]);
+                }
+            }
+        }
+        const spot = emptySpots[Math.floor(Math.random() * emptySpots.length)];
+        return [spot[0], spot[1]];
+        
     }
     return { player1, player2, getActivePlayer, switchActivePlayer };
 })();

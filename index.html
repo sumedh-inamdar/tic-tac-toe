@@ -60,12 +60,12 @@
                 <tbody>
                     <tr>
                         <th></th>
-                        <th>pic1</th>
-                        <th>pic2</th>
+                        <th><i class="fas fa-dragon"></i></th>
+                        <th><i class="fas fa-dungeon"></i></i></th>
                     </tr>
                     <tr>
                         <th>Name</th>
-                        <th><input type="text" class="playerName" id="p1ai" placeholder="First player's name"></th>
+                        <th><input type="text" maxlength="12" class="playerName" id="p1ai" placeholder="First player's name"></th>
                         <th>HAL 9000</th>
                     </tr>
                     <tr>
@@ -75,8 +75,10 @@
                     </tr>
                 </tbody>
             </table>
-            <button class="menuSelect" name="ai" value="play">Let's Play!</button>
-            <button class="menuSelect" name="ai" value="back">Go back</button>
+            <div class="flex-row">
+                <button class="menuSelect leftB" name="ai" value="play">Let's Play!</button>
+                <button class="menuSelect rightB" name="ai" value="back">Go back</button>
+            </div>
         </div>
         <div class="display play">
             <div class="gameCont">
