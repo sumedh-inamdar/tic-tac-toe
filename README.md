@@ -1,6 +1,6 @@
 # Tic Tac Toe
 
-<a href="https://sumedh-inamdar.github.io/tic-tac-toe/">link to page (under construction) </a>
+<a href="https://sumedh-inamdar.github.io/tic-tac-toe/">link to page</a>
 
 ## Features
 
