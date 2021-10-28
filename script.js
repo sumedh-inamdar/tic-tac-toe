@@ -61,6 +61,15 @@ let gameBoard = (function() {
     myGameBoard.isGameTied = () => {
         return _state.every(row => row.every(val => val != 0));
     }
+    myGameBoard.evalScore = () => {
+        if (myGameBoard.isGameWon()) {
+            // Due to active player swap after setting state, we check if p1 is active player as a way of determining if p2 won
+            return gameController.getActivePlayer().getNumber() === 'p1' ? 10 : -10;
+        }
+            
+        
+        return 0;
+    }
     return myGameBoard;
     
 })();
@@ -98,7 +107,7 @@ let displayController = (function() {
             }
         }
     }
-    function updateGameDisplay() {
+    function updateScoreCards() {
         // Update player score cards
         _p1name.textContent = gameController.player1.getName();
         _p2name.textContent = gameController.player2.getName();
@@ -142,7 +151,7 @@ let displayController = (function() {
             event.target.classList.remove(`X_hover`, 'O_hover');
         }
     }
-    return { updateGameBoard, updateGameDisplay, closeAllDisplays, openDisplay, showRoundResult };
+    return { updateGameBoard, updateScoreCards, closeAllDisplays, openDisplay, showRoundResult };
 })();
 
 let gameController = (function() {
@@ -204,7 +213,7 @@ let gameController = (function() {
         currActivePlayer = player1;
         gameBoard.resetBoard();
         displayController.updateGameBoard();
-        displayController.updateGameDisplay();
+        displayController.updateScoreCards();
     }
     function switchActivePlayer() {
         switch(currActivePlayer.getNumber()) {
@@ -220,15 +229,18 @@ let gameController = (function() {
         return currActivePlayer;
     }
     function sqHandler(event) {
+        
+        // check if square has already been selected
         if (event.target.classList.contains('X') || event.target.classList.contains('O')) {
-            return; // prevent square from changing once it's been selected
+            return;
         }
+
         gameBoard.setState(currActivePlayer.getMarker(), event.target.id[2], event.target.id[3]);
         sqHandlerHelper();
 
-        if (currActivePlayer.getgameMode() == 'ai') {
+        if (currActivePlayer.getNumber() == 'p2') {
             setTimeout(function() {
-                const [compPickRow, compPickCol] = computerPick();
+                const [compPickRow, compPickCol] = computerBestMove();
                 gameBoard.setState(currActivePlayer.getMarker(), compPickRow, compPickCol);
                 sqHandlerHelper();
             }, 200);
@@ -246,21 +258,106 @@ let gameController = (function() {
         else {
             switchActivePlayer();
         }
-        displayController.updateGameDisplay();
+        displayController.updateScoreCards();
     }
-    function computerPick() {
+    function computerBestMove() {
         // Random location pick
-        let emptySpots = [];
+        // let emptySpots = [];
+        // for (let row = 0; row < 3; row++) {
+        //     for (let col = 0; col < 3; col++) {
+        //         if (gameBoard.getState(row, col) === 0) {
+        //             emptySpots.push([row, col]);
+        //         }
+        //     }
+        // }
+        // const spot = emptySpots[Math.floor(Math.random() * emptySpots.length)];
+        // return [spot[0], spot[1]];
+
+        // computer: maximizer
+        // human: minimizer
+
+        let bestVal = -1000;
+        let bestMoveRow = -1;
+        let bestMoveCol = -1;
+
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
-                if (gameBoard.getState(row, col) === 0) {
-                    emptySpots.push([row, col]);
+                
+                //check if cell is empty
+                if (gameBoard.getState(row, col) === 0) { 
+                    
+                    //make move for computer (maximizer)
+                    gameBoard.setState(currActivePlayer.getMarker(), row, col);
+                    switchActivePlayer();
+                    // console.log('Before minimax: ' + currActivePlayer.getName());
+                    
+                    //compute eval for this move
+                    let moveVal = minimax(0, false); 
+
+                    //undo the move
+                    gameBoard.setState(0, row, col);
+                    switchActivePlayer();
+                    // console.log('After minimax: ' + currActivePlayer.getName());
+
+                    if (moveVal > bestVal) {
+                        bestMoveRow = row;
+                        bestMoveCol = col;
+                        bestVal = moveVal;
+                    }
                 }
             }
         }
-        const spot = emptySpots[Math.floor(Math.random() * emptySpots.length)];
-        return [spot[0], spot[1]];
-        
+        return [bestMoveRow, bestMoveCol];
+    }
+    function minimax(depth, isMax) {
+        let score = gameBoard.evalScore();
+
+        if (Math.abs(score) == 10)
+            return score - depth;
+
+        if (gameBoard.isGameTied())
+            return 0;
+
+        if (isMax) {
+            let bestVal = -1000;
+
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col <3; col++) {
+                    if (gameBoard.getState(row, col) == 0) {
+                        
+                        gameBoard.setState(currActivePlayer.getMarker(), row, col);
+                        switchActivePlayer();
+
+                        bestVal = Math.max(bestVal, minimax(depth + 1, !isMax));
+
+                        gameBoard.setState(0, row, col);
+                        switchActivePlayer();
+
+                    }
+                }
+            }
+            return bestVal;
+        }
+        else {
+            let bestVal = 1000;
+
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col <3; col++) {
+                    if (gameBoard.getState(row, col) == 0) {
+                        
+                        gameBoard.setState(currActivePlayer.getMarker(), row, col);
+                        switchActivePlayer();
+
+                        bestVal = Math.min(bestVal, minimax(depth + 1, !isMax));
+
+                        gameBoard.setState(0, row, col);
+                        switchActivePlayer();
+
+                    }
+                }
+            }
+            return bestVal;
+        }
     }
     return { player1, player2, getActivePlayer, switchActivePlayer };
 })();
