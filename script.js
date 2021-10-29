@@ -1,7 +1,6 @@
 /* 
-factory function
-- player
-
+Tic Tac Toe
+Creator: Sumedh Inamdar
 */
 
 function newPlayer(name, number, marker, gameMode, score) {
